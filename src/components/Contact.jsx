@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { postContact } from "../api/api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -8,7 +10,6 @@ export default function Contact() {
     subject: "",
     message: "",
   });
-  const [status, setStatus] = useState(null);
   const [borderColors, setBorderColors] = useState({
     sender_name: "border-white",
     sender_email: "border-white",
@@ -30,36 +31,67 @@ export default function Contact() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
 
+    if (name === "sender_name") {
+      let sanitizedValue = value.replace(/[^A-Za-z\s]/g, ""); 
+      sanitizedValue = sanitizedValue.replace(/\s+/g, " "); 
+      sanitizedValue = sanitizedValue.replace(/^\s/, ""); 
+      setForm({ ...form, [name]: sanitizedValue });
+
+      if (sanitizedValue.trim() !== "") {
+        const randomGradient =
+          gradients[Math.floor(Math.random() * gradients.length)];
+        setBorderColors((prev) => ({
+          ...prev,
+          [name]: `animated-border bg-gradient-to-r ${randomGradient}`,
+        }));
+        setActiveGradient(randomGradient);
+      } else {
+        setBorderColors((prev) => ({ ...prev, [name]: "border-white" }));
+      }
+      return;
+    }
+
+    setForm({ ...form, [name]: value });
     if (value.trim() !== "") {
       const randomGradient =
         gradients[Math.floor(Math.random() * gradients.length)];
-
-      // animated gradient border only if value exists
       setBorderColors((prev) => ({
         ...prev,
         [name]: `animated-border bg-gradient-to-r ${randomGradient}`,
       }));
-
       setActiveGradient(randomGradient);
     } else {
-      // reset to white border if empty
-      setBorderColors((prev) => ({
-        ...prev,
-        [name]: "border-white",
-      }));
+      setBorderColors((prev) => ({ ...prev, [name]: "border-white" }));
     }
   };
 
+  const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus("loading");
+
+    if (
+      !form.sender_name.trim() ||
+      !form.sender_email.trim() ||
+      !form.subject.trim() ||
+      !form.message.trim()
+    ) {
+      toast.error("Please fill in all fields correctly!");
+      return;
+    }
+
+    if (!isValidEmail(form.sender_email)) {
+    toast.error("Please enter a valid email!");
+    return;
+  }
+
     try {
+      toast.info("Sending message...");
       await postContact(form);
-      setStatus("success");
+      toast.success("✅ Message sent successfully!");
       setForm({ sender_name: "", sender_email: "", subject: "", message: "" });
-      // reset borders back to white
       setBorderColors({
         sender_name: "border-white",
         sender_email: "border-white",
@@ -68,18 +100,21 @@ export default function Contact() {
       });
     } catch (err) {
       console.error(err);
-      setStatus("error");
+      toast.error("❌ Error sending message. Try again.");
     }
   };
 
   return (
     <section id="contact" className="py-20 relative">
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
       <div className="max-w-3xl mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-6 text-white text-center">Contact</h2>
+        <h2 className="text-3xl font-bold mb-6 text-white text-center">
+          Contact
+        </h2>
 
         <div className="border-2 border-white rounded-xl p-8 bg-transparent backdrop-blur-md shadow-xl">
           <form onSubmit={handleSubmit} className="grid gap-4">
-            {/* Name */}
+  
             <input
               name="sender_name"
               value={form.sender_name}
@@ -89,7 +124,6 @@ export default function Contact() {
               required
             />
 
-            {/* Email */}
             <input
               name="sender_email"
               value={form.sender_email}
@@ -100,7 +134,6 @@ export default function Contact() {
               required
             />
 
-            {/* Subject */}
             <input
               name="subject"
               value={form.subject}
@@ -110,7 +143,6 @@ export default function Contact() {
               required
             />
 
-            {/* Message */}
             <textarea
               name="message"
               value={form.message}
@@ -120,7 +152,6 @@ export default function Contact() {
               required
             />
 
-            {/* Button */}
             <div className="flex items-center gap-3 mt-2">
               <button
                 type="submit"
@@ -128,34 +159,11 @@ export default function Contact() {
               >
                 Send Message
               </button>
-              <div>
-                {status === "loading" && <span>Sending...</span>}
-                {status === "success" && (
-                  <span className="text-green-400">✅ Message sent!</span>
-                )}
-                {status === "error" && (
-                  <span className="text-red-400">❌ Error sending message.</span>
-                )}
-              </div>
             </div>
           </form>
-
-          <div className="mt-8 text-center">
-            <h3 className="font-semibold text-lg text-white">Also reach me at</h3>
-            <p className="text-sm text-gray-300 mt-2">
-              ragulranjith1106@gmail.com •{" "}
-              <a
-                href="https://www.linkedin.com/in/ragul-r-9928aa211/"
-                className="underline hover:text-blue-400"
-              >
-                LinkedIn
-              </a>
-            </p>
-          </div>
         </div>
       </div>
 
-      {/* Gradient Border Animation CSS */}
       <style>{`
         .animated-border {
           background-size: 200% 200%;
