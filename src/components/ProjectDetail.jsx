@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { fetchProjectById } from "../api/api"; // ✅ use central API
 import Skills from "./Skills";
 
 export default function ProjectDetail() {
@@ -10,22 +10,17 @@ export default function ProjectDetail() {
   const [project, setProject] = useState(null);
   const [error, setError] = useState(null);
 
-  const API_ROOT = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api").replace(/\/+$/, "");
-
- const softNeonGradients = [
-  "linear-gradient(45deg, #2E8BC0, #6A4C93)",
-  "linear-gradient(45deg, #8C4B7B, #BF6F92)",
-  "linear-gradient(45deg, #3D348B, #6A0572)",
-  "linear-gradient(45deg, #4A90E2, #5D5FEF)",
-  "linear-gradient(45deg, #6A0572, #8C2F6B)",
-  "linear-gradient(45deg, #5D3A00, #9C661F)"
-];
-
-
+  const softNeonGradients = [
+    "linear-gradient(45deg, #2E8BC0, #6A4C93)",
+    "linear-gradient(45deg, #8C4B7B, #BF6F92)",
+    "linear-gradient(45deg, #3D348B, #6A0572)",
+    "linear-gradient(45deg, #4A90E2, #5D5FEF)",
+    "linear-gradient(45deg, #6A0572, #8C2F6B)",
+    "linear-gradient(45deg, #5D3A00, #9C661F)",
+  ];
 
   useEffect(() => {
-    axios
-      .get(`${API_ROOT}/projects/${id}/`)
+    fetchProjectById(id)
       .then((res) => setProject(res.data))
       .catch(() => setError("Failed to load project"));
   }, [id]);
@@ -72,57 +67,58 @@ export default function ProjectDetail() {
           </motion.p>
         </div>
       </div>
-                
 
-
+      {/* Stacks */}
       <div className="mt-12">
-        <h3 className="text-2xl font-semibold text-yellow-400 mb-6">Stacks Used</h3>
+        <h3 className="text-2xl font-semibold text-yellow-400 mb-6">
+          Stacks Used
+        </h3>
         <div className="flex flex-wrap gap-4 text-gray-300">
-  {["FRONTEND", "BACKEND", "DATABASE", "DEPLOYMENT"].map((category, catIdx) => {
-    const skills = project[category.toLowerCase()]?.split(",") || [];
-    if (!skills.length) return null;
+          {["FRONTEND", "BACKEND", "DATABASE", "DEPLOYMENT"].map(
+            (category, catIdx) => {
+              const skills = project[category.toLowerCase()]?.split(",") || [];
+              if (!skills.length) return null;
 
-    return (
-      <div key={catIdx} className="flex-1 min-w-[120px]">
-        <strong className="block text-yellow-400 mb-2">{category}</strong>
-        <div className="flex flex-col gap-3">
-          {skills.map((skill, idx) => {
-            const gradient = softNeonGradients[idx % softNeonGradients.length];
-            const floatDuration = 3 + Math.random() * 2; // 3-5s
-            const twinkleDuration = 1.5 + Math.random() * 2; // 1.5-3.5s
-            const glowDuration = 1.5 + Math.random() * 1.5; // 1.5-3s
+              return (
+                <div key={catIdx} className="flex-1 min-w-[120px]">
+                  <strong className="block text-yellow-400 mb-2">
+                    {category}
+                  </strong>
+                  <div className="flex flex-col gap-3">
+                    {skills.map((skill, idx) => {
+                      const gradient =
+                        softNeonGradients[idx % softNeonGradients.length];
+                      const floatDuration = 3 + Math.random() * 2;
+                      const twinkleDuration = 1.5 + Math.random() * 2;
+                      const glowDuration = 1.5 + Math.random() * 1.5;
 
-            return (
-              <motion.span
-                key={idx}
-                className="cosmic-skill"
-                style={{
-                  background: gradient,
-                  animation: `softGlowPulse ${glowDuration}s ease-in-out infinite, twinkle ${twinkleDuration}s ease-in-out infinite, floatY ${floatDuration}s ease-in-out infinite, gradientShift 6s ease infinite`
-                }}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: idx * 0.1 + catIdx * 0.2, type: "spring", stiffness: 200 }}
-              >
-                {skill.trim()}
-              </motion.span>
-            );
-          })}
+                      return (
+                        <motion.span
+                          key={idx}
+                          className="cosmic-skill"
+                          style={{
+                            background: gradient,
+                            animation: `softGlowPulse ${glowDuration}s ease-in-out infinite, twinkle ${twinkleDuration}s ease-in-out infinite, floatY ${floatDuration}s ease-in-out infinite, gradientShift 6s ease infinite`,
+                          }}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{
+                            delay: idx * 0.1 + catIdx * 0.2,
+                            type: "spring",
+                            stiffness: 200,
+                          }}
+                        >
+                          {skill.trim()}
+                        </motion.span>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            }
+          )}
         </div>
       </div>
-    );
-  })}
-</div>
-
-      </div>
-
-      {/* Technologies with icons */}
-      {/* {project.technologies?.length > 0 && (
-        <div className="mt-10">
-          <h3 className="text-xl font-semibold text-white mb-3">Technologies</h3>
-          <Skills skills={project.technologies} />
-        </div>
-      )} */}
 
       {/* Links */}
       <div className="mt-10 flex gap-4">
@@ -148,7 +144,5 @@ export default function ProjectDetail() {
         )}
       </div>
     </section>
-
-
   );
 }

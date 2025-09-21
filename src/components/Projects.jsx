@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { fetchProjects } from "../api/api"; // import from your api file
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -10,21 +10,22 @@ export default function Projects() {
   const [cardsPerPage, setCardsPerPage] = useState(2);
   const navigate = useNavigate();
 
-  // Update cardsPerPage based on screen width
+  // Responsive cards per page
   useEffect(() => {
     const updateCardsPerPage = () => {
-      if (window.innerWidth < 640) setCardsPerPage(1); // Mobile
-      else setCardsPerPage(2); // Tablet & Desktop
+      if (window.innerWidth < 640) setCardsPerPage(1);
+      else setCardsPerPage(2);
     };
     updateCardsPerPage();
     window.addEventListener("resize", updateCardsPerPage);
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
 
+  // Fetch projects via API file
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/api/projects/")
-      .then((res) => setProjects(res.data.results || res.data || []));
+    fetchProjects()
+      .then((res) => setProjects(res.data.results || res.data || []))
+      .catch((err) => console.error("Error fetching projects:", err));
   }, []);
 
   const totalPages = Math.ceil(projects.length / cardsPerPage);

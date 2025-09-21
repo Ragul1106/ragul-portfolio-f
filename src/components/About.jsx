@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { fetchProfile } from "../api/api"; // ✅ API import
 
-export default function About({ profile }) {
+export default function About({ profile: profileProp }) {
+  const [profile, setProfile] = useState(profileProp || null);
+
+  // Fetch profile if not passed via props
+  useEffect(() => {
+    if (!profileProp) {
+      fetchProfile()
+        .then((res) => setProfile(res.data))
+        .catch((err) => console.error("Error fetching profile:", err));
+    }
+  }, [profileProp]);
+
   const fullText =
     profile?.bio ||
     "Write your professional bio in Django admin. This text is loaded from the API.";
@@ -15,7 +27,7 @@ export default function About({ profile }) {
       setDisplayedText(fullText.slice(0, i + 1));
       i++;
       if (i === fullText.length) clearInterval(interval);
-    }, 50); // typing speed
+    }, 50);
     return () => clearInterval(interval);
   }, [fullText]);
 
@@ -37,7 +49,7 @@ export default function About({ profile }) {
           About Me
         </motion.h2>
 
-        {/* Bio with Typewriter + Floating Gradient Glow */}
+        {/* Bio */}
         <motion.p
           className="text-lg text-white dark:text-gray-300 leading-relaxed max-w-5xl mx-auto mt-6 flex flex-wrap justify-center"
           initial={{ opacity: 0 }}
@@ -49,10 +61,7 @@ export default function About({ profile }) {
               key={i}
               className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 animate-gradient-shimmer"
               initial={{ opacity: 0, y: 5 }}
-              animate={{
-                opacity: 1,
-                y: [0, -2, 0], // floating up and down
-              }}
+              animate={{ opacity: 1, y: [0, -2, 0] }}
               transition={{
                 delay: i * 0.03,
                 duration: 2,
@@ -65,7 +74,7 @@ export default function About({ profile }) {
           ))}
         </motion.p>
 
-        {/* Skills Section */}
+        {/* Skills */}
         <motion.div className="mt-12">
           <motion.h3
             className="text-5xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"
