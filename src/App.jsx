@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import CursorSparkles from "./components/CursorSparkles";
 import AnimatedBackground from "./components/AnimatedBackground";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -11,17 +10,6 @@ import ProjectDetail from "./components/ProjectDetail";
 import Contact from "./components/Contact";
 import { fetchProfile, fetchProjects } from "./api/api";
 
-// Wrapper for pages
-// function HomePage({ profile, projects }) {
-//   return (
-//     <>
-//       <Hero profile={profile} />
-//       <About profile={profile} />
-//       <Projects projects={projects} />
-//       <Contact />
-//     </>
-//   );
-// }
 
 function App() {
   const [profile, setProfile] = useState(null);
@@ -44,7 +32,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <CursorSparkles />
       <AnimatedBackground />
       <Navbar />
       <main className="max-w-6xl mx-auto px-4">

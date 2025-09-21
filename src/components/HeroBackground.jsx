@@ -1,11 +1,12 @@
+// src/components/HeroBackground.jsx
 import React, { useEffect, useState } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
-export default function StarfieldBackground() {
+export default function HeroBackground() {
   const [stars, setStars] = useState([]);
   const [shootingStars, setShootingStars] = useState([]);
 
-  // Mouse motion
+  // Mouse motion for parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const offsetX = useTransform(mouseX, [0, window.innerWidth], [-50, 50]);
@@ -40,7 +41,7 @@ export default function StarfieldBackground() {
     setStars(generatedStars);
   }, []);
 
-  // Generate shooting stars randomly
+  // Shooting stars
   useEffect(() => {
     const interval = setInterval(() => {
       const newStar = {
@@ -51,18 +52,17 @@ export default function StarfieldBackground() {
         duration: Math.random() * 1 + 1,
       };
       setShootingStars((prev) => [...prev, newStar]);
-
-      // Remove shooting star after duration
-      setTimeout(() => {
-        setShootingStars((prev) => prev.filter((s) => s.id !== newStar.id));
-      }, newStar.duration * 1000);
-    }, 2000); // every 2 seconds
+      setTimeout(
+        () => setShootingStars((prev) => prev.filter((s) => s.id !== newStar.id)),
+        newStar.duration * 1000
+      );
+    }, 2500);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-black">
-      {/* Regular stars */}
+    <div className="absolute inset-0 -z-20 bg-black overflow-hidden">
+      {/* Stars */}
       {stars.map((star) => (
         <motion.div
           key={star.id}
@@ -90,7 +90,7 @@ export default function StarfieldBackground() {
         />
       ))}
 
-      {/* Shooting stars */}
+      {/* Shooting Stars */}
       {shootingStars.map((s) => (
         <motion.div
           key={s.id}
@@ -108,6 +108,29 @@ export default function StarfieldBackground() {
           transition={{ duration: s.duration, ease: "easeOut" }}
         />
       ))}
+
+      {/* Aurora */}
+      <motion.div
+        className="absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(circle at 20% 30%, rgba(0,200,255,0.2), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,0,150,0.15), transparent 70%)",
+        }}
+        animate={{ opacity: [0.6, 0.9, 0.6] }}
+        transition={{ duration: 6, repeat: Infinity, repeatType: "mirror" }}
+      />
+
+      {/* Floating orbs */}
+      <motion.div
+        className="absolute top-20 left-20 w-40 h-40 rounded-full bg-purple-500/20 blur-3xl -z-10"
+        animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
+        transition={{ duration: 10, repeat: Infinity, repeatType: "mirror" }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-20 w-52 h-52 rounded-full bg-blue-500/20 blur-3xl -z-10"
+        animate={{ x: [0, -40, 0], y: [0, 30, 0] }}
+        transition={{ duration: 12, repeat: Infinity, repeatType: "mirror" }}
+      />
     </div>
   );
 }
