@@ -61,6 +61,10 @@ export default function Hero({ profile }) {
     return () => clearInterval(interval);
   }, []);
 
+  const resumeUrl =
+    profile?.resume_url?.trim?.() ||
+    "https://drive.google.com/uc?export=download&id=147itFIHg00e_K04aa5ZtCqWTFQAiDM1C";
+
   return (
     <section
       className="relative min-h-[90vh] flex items-center overflow-hidden"
@@ -170,8 +174,10 @@ export default function Hero({ profile }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.8 }}
           >
-            {/* <a
-              href={profile?.resume_url || "#"}
+            <a
+              href={resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="relative inline-block px-6 py-2 cursor-pointer rounded bg-blue-600 text-white font-semibold transition overflow-hidden"
             >
               <span className="relative z-10">Download Resume</span>
@@ -181,22 +187,7 @@ export default function Hero({ profile }) {
                 whileHover={{ x: "0%" }}
                 transition={{ duration: 0.4 }}
               />
-            </a> */}
-
-                <a
-  href={profile?.resume_url} // direct download link
-  target="_blank"
-  rel="noopener noreferrer"
-  className="relative inline-block px-6 py-2 cursor-pointer rounded bg-blue-600 text-white font-semibold transition overflow-hidden"
->
-  <span className="relative z-10">Download Resume</span>
-  <motion.span
-    className="absolute inset-0 bg-blue-400"
-    initial={{ x: "-100%" }}
-    whileHover={{ x: "0%" }}
-    transition={{ duration: 0.4 }}
-  />
-</a>
+            </a>
 
             <button
               onClick={() => navigate("/projects")}
