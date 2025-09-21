@@ -25,7 +25,7 @@ export default function Hero({ profile }) {
   // Generate stars
   useEffect(() => {
     const generatedStars = [];
-    const numStars = 200;
+    const numStars = window.innerWidth < 768 ? 100 : 200; // fewer stars on mobile
     for (let i = 0; i < numStars; i++) {
       const layer = Math.random() < 0.5 ? 1 : 2;
       generatedStars.push({
@@ -61,12 +61,14 @@ export default function Hero({ profile }) {
     return () => clearInterval(interval);
   }, []);
 
+  // HTTPS-safe profile image
+  const profileImage = profile?.profile_image
+    ? profile.profile_image.replace("http://127.0.0.1:8000", "https://ragul-portfolio-b.onrender.com")
+    : null;
+
   return (
-    <section
-      className="relative min-h-[90vh] flex items-center overflow-hidden"
-      style={{ paddingTop: "72px" }}
-    >
-      {/* Starfield background */}
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-20">
+      {/* Starfield Background */}
       <div className="absolute inset-0 -z-20 bg-black">
         {stars.map((star) => (
           <motion.div
@@ -78,8 +80,8 @@ export default function Hero({ profile }) {
               top: star.top,
               left: star.left,
               opacity: star.opacity,
-              x: star.layer === 2 ? offsetX : "0px",
-              y: star.layer === 2 ? offsetY : "0px",
+              x: star.layer === 2 ? offsetX : 0,
+              y: star.layer === 2 ? offsetY : 0,
             }}
             animate={{
               y: ["0px", "800px"],
@@ -113,7 +115,7 @@ export default function Hero({ profile }) {
           />
         ))}
 
-        {/* Aurora gradient waves */}
+        {/* Aurora gradient */}
         <motion.div
           className="absolute inset-0 -z-10"
           style={{
@@ -127,26 +129,25 @@ export default function Hero({ profile }) {
 
       {/* Floating glowing orbs */}
       <motion.div
-        className="absolute top-20 left-20 w-40 h-40 rounded-full bg-purple-500/20 blur-3xl -z-10"
+        className="absolute top-20 left-5 sm:left-10 w-32 sm:w-40 h-32 sm:h-40 rounded-full bg-purple-500/20 blur-3xl -z-10"
         animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
         transition={{ duration: 10, repeat: Infinity, repeatType: "mirror" }}
       />
       <motion.div
-        className="absolute bottom-20 right-20 w-52 h-52 rounded-full bg-blue-500/20 blur-3xl -z-10"
+        className="absolute bottom-20 right-5 sm:right-10 w-44 sm:w-52 h-44 sm:h-52 rounded-full bg-blue-500/20 blur-3xl -z-10"
         animate={{ x: [0, -40, 0], y: [0, 30, 0] }}
         transition={{ duration: 12, repeat: Infinity, repeatType: "mirror" }}
       />
 
-      {/* Hero content */}
-      <div className="w-full grid md:grid-cols-2 gap-8 items-center relative z-10 px-6">
+      {/* Hero Content */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative z-10 px-6">
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         >
-          {/* Typewriter effect */}
           <motion.h1
-            className="text-4xl md:text-6xl pb-5 font-extrabold text-white"
+            className="text-4xl sm:text-5xl md:text-6xl pb-5 font-extrabold text-white"
             initial={{ width: 0 }}
             animate={{ width: "100%" }}
             transition={{ duration: 2, ease: "easeInOut" }}
@@ -156,7 +157,7 @@ export default function Hero({ profile }) {
           </motion.h1>
 
           <motion.p
-            className="mt-3 text-xl text-gray-300"
+            className="mt-3 text-lg sm:text-xl text-gray-300"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
@@ -165,56 +166,51 @@ export default function Hero({ profile }) {
           </motion.p>
 
           <motion.div
-            className="mt-6 flex gap-4"
+            className="mt-6 flex flex-wrap gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.8 }}
           >
             <a
               href={profile?.resume_url || "#"}
-              className="relative inline-block px-6 py-2 cursor-pointer rounded bg-blue-600 text-white font-semibold transition overflow-hidden"
+              className="relative inline-block px-6 py-2 cursor-pointer rounded bg-blue-600 text-white font-semibold overflow-hidden transition-transform hover:scale-105"
             >
-              <span className="relative z-10">Download Resume</span>
-              <motion.span
-                className="absolute inset-0 bg-blue-400"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "0%" }}
-                transition={{ duration: 0.4 }}
-              />
+              Download Resume
             </a>
 
             <button
               onClick={() => navigate("/projects")}
-              className="relative inline-block px-6 py-2 rounded cursor-pointer bg-purple-600 text-white font-semibold transition overflow-hidden"
+              className="relative inline-block px-6 py-2 rounded cursor-pointer bg-purple-600 text-white font-semibold overflow-hidden transition-transform hover:scale-105"
             >
-              <span className="relative z-10">Discover Projects</span>
-              <motion.span
-                className="absolute inset-0 bg-purple-400"
-                initial={{ y: "100%" }}
-                whileHover={{ y: "0%" }}
-                transition={{ duration: 0.4 }}
-              />
+              Discover Projects
             </button>
           </motion.div>
         </motion.div>
 
-        {/* Profile image with glow */}
+        {/* Profile Image */}
         <motion.div
-          className="flex justify-center"
+          className="flex justify-center mt-6 md:mt-0"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1 }}
         >
-          {profile?.profile_image ? (
+          {profileImage ? (
             <motion.img
-              src={profile.profile_image}
+              src={profileImage}
               alt="profile"
-              className="w-56 h-56 object-cover rounded-2xl shadow-xl"
-              animate={{ scale: [1, 1.05, 1], boxShadow: ["0 0 20px #9333ea", "0 0 40px #3b82f6", "0 0 20px #9333ea"] }}
+              className="w-48 sm:w-56 md:w-64 h-48 sm:h-56 md:h-64 object-cover rounded-2xl shadow-xl"
+              animate={{
+                scale: [1, 1.05, 1],
+                boxShadow: [
+                  "0 0 20px #9333ea",
+                  "0 0 40px #3b82f6",
+                  "0 0 20px #9333ea",
+                ],
+              }}
               transition={{ duration: 4, repeat: Infinity }}
             />
           ) : (
-            <div className="w-56 h-56 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold">
+            <div className="w-48 sm:w-56 md:w-64 h-48 sm:h-56 md:h-64 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold">
               Logo
             </div>
           )}
@@ -223,9 +219,6 @@ export default function Hero({ profile }) {
     </section>
   );
 }
-
-
-
 
 
 
