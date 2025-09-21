@@ -2,8 +2,39 @@ import React, { useEffect, useState } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import HeroBackground from "./HeroBackground";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 export default function Hero({ profile }) {
+
+ const icons = [
+    {
+      href: "https://github.com/Ragul1106",
+      icon: <FaGithub size={22} />,
+      hoverStyle: {
+        background:
+          "linear-gradient(135deg, #6e8efb 0%, #a777e3 100%)",
+        boxShadow: "0px 0px 20px rgba(167,119,227,0.6)",
+      },
+    },
+    {
+      href: "https://www.linkedin.com/in/ragulr/",
+      icon: <FaLinkedin size={25} />,
+      hoverStyle: {
+        background:
+          "linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)", 
+        boxShadow: "0px 0px 20px rgba(0,114,255,0.6)",
+      },
+    },
+    {
+      href: "https://twitter.com/ragulr",
+      icon: <FaTwitter size={25} />,
+      hoverStyle: {
+        background:
+          "linear-gradient(135deg, #43cea2 0%, #185a9d 100%)", 
+        boxShadow: "0px 0px 20px rgba(67,206,162,0.6)",
+      },
+    },
+  ];
   const navigate = useNavigate();
   const resumeUrl =
     profile?.resume_url?.trim?.() ||
@@ -17,7 +48,6 @@ export default function Hero({ profile }) {
   const offsetX = useTransform(mouseX, [0, window.innerWidth], [-20, 20]);
   const offsetY = useTransform(mouseY, [0, window.innerHeight], [-20, 20]);
 
-  // Track mouse movement & spawn particles
   useEffect(() => {
     const handleMouseMove = (e) => {
       mouseX.set(e.clientX);
@@ -37,11 +67,11 @@ export default function Hero({ profile }) {
         setParticles((prev) => prev.filter((p) => p.id !== newParticle.id));
       }, 1200);
     };
+    
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  // Foreground stars
   useEffect(() => {
     const stars = [];
     for (let i = 0; i < 50; i++) {
@@ -58,7 +88,6 @@ export default function Hero({ profile }) {
     setFgStars(stars);
   }, []);
 
-  // Particle lines
   const particleLines = [];
   const distanceThreshold = 80;
   for (let i = 0; i < particles.length; i++) {
@@ -78,7 +107,6 @@ export default function Hero({ profile }) {
     <section className="relative min-h-[90vh] flex items-center overflow-hidden" style={{ paddingTop: "72px" }}>
       <HeroBackground />
 
-      {/* Foreground stars */}
       {fgStars.map((star) => (
         <motion.div
           key={star.id}
@@ -97,7 +125,6 @@ export default function Hero({ profile }) {
         />
       ))}
 
-      {/* Particle lines */}
       <svg className="absolute inset-0 -z-10 w-full h-full pointer-events-none">
         {particleLines.map((line, idx) => (
           <line
@@ -113,7 +140,6 @@ export default function Hero({ profile }) {
         ))}
       </svg>
 
-      {/* Mouse particles */}
       {particles.map((p) => (
         <motion.div
           key={p.id}
@@ -131,7 +157,6 @@ export default function Hero({ profile }) {
         />
       ))}
 
-      {/* Floating soft blobs / shapes */}
       <motion.div
         className="absolute w-72 h-72 rounded-full bg-purple-500/20 blur-3xl -z-10"
         animate={{ x: [0, 60, 0], y: [0, -40, 0] }}
@@ -148,7 +173,6 @@ export default function Hero({ profile }) {
         transition={{ duration: 22, repeat: Infinity, repeatType: "mirror" }}
       />
 
-      {/* Hero content */}
       <div className="w-full grid md:grid-cols-2 gap-8 items-center relative z-10 px-6">
         <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1 }}>
           <motion.h1
@@ -161,11 +185,11 @@ export default function Hero({ profile }) {
             {profile?.name || "Ragul R"}
           </motion.h1>
 
-          <motion.p className="mt-3 text-xl text-gray-300">
+          <motion.p className="mt-3 text-2xl text-white">
             {profile?.title || "Full Stack Developer — React • Django • Tailwind"}
           </motion.p>
 
-          <motion.p className="mt-2 text-gray-400 text-lg max-w-md">
+          <motion.p className="mt-2 text-white text-lg max-w-md">
             I build interactive web apps and scalable backends with modern technologies.
             Let’s create something amazing together!
           </motion.p>
@@ -178,6 +202,39 @@ export default function Hero({ profile }) {
               Discover Projects
             </button>
           </motion.div>
+
+          <motion.div className="mt-6 flex gap-4">
+      {icons.map((item, idx) => (
+        <motion.a
+          key={idx}
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative inline-flex items-center justify-center w-12 h-12 cursor-pointer border-2 border-white rounded-full text-white overflow-hidden"
+          whileHover={{
+            scale: 1.2,
+            rotate: 10,
+            background: item.hoverStyle.background,
+            boxShadow: item.hoverStyle.boxShadow,
+          }}
+          whileTap={{ scale: 0.9 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{
+            opacity: 1,
+            y: [0, -6, 0], // floating up & down
+          }}
+          transition={{
+            duration: 1.8,
+            repeat: Infinity,
+            repeatType: "mirror",
+            delay: idx * 0.2, // staggered float
+          }}
+        >
+          {item.icon}
+        </motion.a>
+      ))}
+    </motion.div>
+
 
         </motion.div>
 
@@ -199,11 +256,6 @@ export default function Hero({ profile }) {
             </div>
           )}
 
-          {/* <motion.div
-            className="absolute -inset-10 rounded-3xl bg-purple-500/20 blur-3xl"
-            animate={{ x: [0, 40, 0], y: [0, -30, 0] }}
-            transition={{ duration: 12, repeat: Infinity, repeatType: "mirror" }}
-          /> */}
           <motion.div
             className="absolute -inset-16 rounded-3xl bg-blue-400/10 blur-3xl"
             animate={{ x: [0, -50, 0], y: [0, 20, 0] }}

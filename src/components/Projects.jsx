@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { fetchProjects } from "../api/api"; // import from your api file
+import { fetchProjects } from "../api/api";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -10,7 +10,6 @@ export default function Projects() {
   const [cardsPerPage, setCardsPerPage] = useState(2);
   const navigate = useNavigate();
 
-  // Responsive cards per page
   useEffect(() => {
     const updateCardsPerPage = () => {
       if (window.innerWidth < 640) setCardsPerPage(1);
@@ -51,7 +50,7 @@ export default function Projects() {
       <div className="absolute inset-0 -z-10 bg-transparent" />
 
       <motion.h2
-        className="relative z-10 text-3xl md:text-4xl pb-4 font-bold mb-10 text-center bg-gradient-to-r from-blue-500 to-pink-500 text-transparent bg-clip-text"
+        className="relative z-10 text-3xl md:text-4xl lg:pb-4 font-bold mb-10 text-center bg-gradient-to-r from-blue-500 to-pink-500 text-transparent bg-clip-text"
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -83,7 +82,9 @@ export default function Projects() {
             {visibleProjects.map((p) => (
               <motion.div
                 key={p.id}
-                className={`min-w-[${cardsPerPage === 1 ? "90%" : "260px"}] sm:min-w-[${cardsPerPage === 1 ? "80%" : "300px"}] md:min-w-[400px] max-w-[400px] bg-transparent border border-gray-700 rounded-2xl shadow-lg p-4 cursor-pointer backdrop-blur-md flex-shrink-0`}
+                className={`w-full sm:w-[320px] md:w-[400px] max-w-[400px] 
+    bg-transparent border border-gray-700 rounded-2xl shadow-lg 
+    p-4 cursor-pointer backdrop-blur-md flex-shrink-0`}
                 whileHover={{ scale: 1.05, rotate: 1 }}
                 onClick={() => navigate(`/projects/${p.id}`)}
               >
@@ -154,22 +155,16 @@ export default function Projects() {
         </button>
       </div>
 
-      {/* Clickable Pagination Dots */}
       <div className="flex justify-center mt-6 gap-2">
         {Array.from({ length: totalPages }).map((_, i) => (
           <button
             key={i}
             onClick={() => handleDotClick(i)}
-            className={`w-3 h-3 rounded-full ${
-              i === page ? "bg-blue-500" : "bg-gray-700"
-            } hover:scale-110 transition-transform`}
+            className={`w-3 h-3 rounded-full ${i === page ? "bg-blue-500" : "bg-gray-700"
+              } hover:scale-110 transition-transform`}
           ></button>
         ))}
       </div>
     </section>
   );
 }
-
-
-
-

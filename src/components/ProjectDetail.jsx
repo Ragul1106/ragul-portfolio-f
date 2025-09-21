@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchProjectById } from "../api/api"; 
-import Skills from "./Skills";
+
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -30,7 +30,7 @@ export default function ProjectDetail() {
 
   return (
     <section className="py-20 max-w-6xl mx-auto px-6">
-      {/* Back button */}
+    
       <button
         className="mb-6 text-blue-400 cursor-pointer hover:text-blue-600"
         onClick={() => navigate(-1)}
@@ -38,7 +38,6 @@ export default function ProjectDetail() {
         ← Back
       </button>
 
-      {/* Top: image + description */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
         {project.image && (
           <img
@@ -64,64 +63,7 @@ export default function ProjectDetail() {
             transition={{ delay: 0.2 }}
           >
             {project.long_description || project.short_description}
-          </motion.p>
-        </div>
-      </div>
-
-      {/* Stacks */}
-      <div className="mt-12">
-        <h3 className="text-2xl font-semibold text-yellow-400 mb-6">
-          Stacks Used
-        </h3>
-        <div className="flex flex-wrap gap-4 text-gray-300">
-          {["FRONTEND", "BACKEND", "DATABASE", "DEPLOYMENT"].map(
-            (category, catIdx) => {
-              const skills = project[category.toLowerCase()]?.split(",") || [];
-              if (!skills.length) return null;
-
-              return (
-                <div key={catIdx} className="flex-1 min-w-[120px]">
-                  <strong className="block text-yellow-400 mb-2">
-                    {category}
-                  </strong>
-                  <div className="flex flex-col gap-3">
-                    {skills.map((skill, idx) => {
-                      const gradient =
-                        softNeonGradients[idx % softNeonGradients.length];
-                      const floatDuration = 3 + Math.random() * 2;
-                      const twinkleDuration = 1.5 + Math.random() * 2;
-                      const glowDuration = 1.5 + Math.random() * 1.5;
-
-                      return (
-                        <motion.span
-                          key={idx}
-                          className="cosmic-skill"
-                          style={{
-                            background: gradient,
-                            animation: `softGlowPulse ${glowDuration}s ease-in-out infinite, twinkle ${twinkleDuration}s ease-in-out infinite, floatY ${floatDuration}s ease-in-out infinite, gradientShift 6s ease infinite`,
-                          }}
-                          initial={{ scale: 0.8, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{
-                            delay: idx * 0.1 + catIdx * 0.2,
-                            type: "spring",
-                            stiffness: 200,
-                          }}
-                        >
-                          {skill.trim()}
-                        </motion.span>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            }
-          )}
-        </div>
-      </div>
-
-      {/* Links */}
-      <div className="mt-10 flex gap-4">
+             <div className="mt-10 flex gap-4">
         {project.github_url && (
           <a
             href={project.github_url}
@@ -143,6 +85,92 @@ export default function ProjectDetail() {
           </a>
         )}
       </div>
+          </motion.p>
+        </div>
+        
+      </div>
+
+      <div className="mt-12">
+  <h3 className="text-4xl font-semibold text-center text-yellow-400 mb-8 underline underline-offset-8 decoration-yellow-400">
+    Stacks Used
+  </h3>
+  <div className="flex flex-wrap gap-8 text-gray-300">
+    {["FRONTEND", "BACKEND", "DATABASE", "DEPLOYMENT"].map(
+      (category, catIdx) => {
+        const skills = project[category.toLowerCase()]?.split(",") || [];
+        if (!skills.length) return null;
+
+        return (
+          <div
+            key={catIdx}
+            className="flex-1 min-w-[200px] bg-gray-900/40 p-6 rounded-xl shadow-lg"
+          >
+            <strong
+              className="block text-white text-lg font-semibold mb-5 relative 
+              after:content-[''] after:absolute after:left-0 after:bottom-[-6px] after:w-20 after:h-[3px] after:bg-yellow-400 after:rounded-full"
+            >
+              {category}
+            </strong>
+
+            <div className="flex flex-col gap-3">
+              {skills.map((skill, idx) => {
+                const gradient =
+                  softNeonGradients[idx % softNeonGradients.length];
+                const floatDuration = 3 + Math.random() * 2;
+                const twinkleDuration = 1.5 + Math.random() * 2;
+                const glowDuration = 1.5 + Math.random() * 1.5;
+
+                return (
+                  <motion.span
+                    key={idx}
+                    className="cosmic-skill"
+                    style={{
+                      background: gradient,
+                      animation: `softGlowPulse ${glowDuration}s ease-in-out infinite, twinkle ${twinkleDuration}s ease-in-out infinite, floatY ${floatDuration}s ease-in-out infinite, gradientShift 6s ease infinite`,
+                    }}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{
+                      delay: idx * 0.1 + catIdx * 0.2,
+                      type: "spring",
+                      stiffness: 200,
+                    }}
+                  >
+                    {skill.trim()}
+                  </motion.span>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+    )}
+  </div>
+</div>
+
+
+      {/* <div className="mt-10 flex gap-4">
+        {project.github_url && (
+          <a
+            href={project.github_url}
+            target="_blank"
+            rel="noreferrer"
+            className="px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition"
+          >
+            GitHub
+          </a>
+        )}
+        {project.project_url && (
+          <a
+            href={project.project_url}
+            target="_blank"
+            rel="noreferrer"
+            className="px-5 py-2 bg-purple-600 text-white rounded-lg hover:bg-pink-500 transition"
+          >
+            Live Demo
+          </a>
+        )}
+      </div> */}
     </section>
   );
 }
