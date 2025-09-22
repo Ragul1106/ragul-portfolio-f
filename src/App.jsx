@@ -9,6 +9,7 @@ import Projects from "./components/Projects";
 import ProjectDetail from "./components/ProjectDetail";
 import Contact from "./components/Contact";
 import { fetchProfile, fetchProjects } from "./api/api";
+import Experience from "./components/Experience";
 
 
 function App() {
@@ -39,7 +40,8 @@ function App() {
           <Route path="/" element={<Hero profile={profile} projects={projects} />} />
           <Route path="/about" element={<About profile={profile} />} />
           <Route path="/projects" element={<Projects projects={projects} />} />
-           <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path ="/experience" element={<Experience/>} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>
