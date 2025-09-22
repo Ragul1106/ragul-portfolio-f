@@ -72,3 +72,43 @@ html {
   transform: scale(1.15) rotate(2deg);
   text-shadow: 0 0 8px rgba(255,255,255,0.5), 0 0 12px rgba(100,200,255,0.3);
 }
+
+
+.wow-text {
+  background: linear-gradient(
+    90deg,
+    #ff6ec4,
+    #7873f5,
+    #4ade80,
+    #fa15fa,
+    #ff6ec4
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: wowGradient 8s ease infinite;
+  font-weight: 500;
+}
+
+@keyframes wowGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+.no-hyphens {
+  word-break: normal;       
+  overflow-wrap: anywhere;  
+  hyphens: manual;          
+}
+
+p, span {
+  word-break: normal;
+}
