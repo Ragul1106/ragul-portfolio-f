@@ -1,19 +1,20 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Inter:wght@400;500;600&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif; 
+  color: #e0e0e0; 
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif; 
+  font-weight: 700;
+}
 
 html {
   scroll-behavior: smooth;
 }
 
-/* @keyframes gradient-x {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-gradient-x {
-  background-size: 200% 200%;
-  animation: gradient-x 5s ease infinite;
-} */
 
 @keyframes gradient-shimmer {
   0% { background-position: 0% 50%; }
@@ -77,17 +78,18 @@ html {
 .wow-text {
   background: linear-gradient(
     90deg,
-    #ff6ec4,
-    #7873f5,
-    #4ade80,
-    #fa15fa,
-    #d7d2d5
+    #f5f0f3,
+    #f3e8c1,
+    #d4d7d5,
+    #d3f3f5,
+    #f4c7c8
   );
   background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: wowGradient 8s ease infinite;
   font-weight: 500;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.2); /* subtle glow for contrast */
 }
 
 @keyframes wowGradient {
@@ -111,4 +113,34 @@ html {
 
 p, span {
   word-break: normal;
+}
+
+
+.wow-heading {
+  background: linear-gradient(
+    90deg,
+    #4ade80,
+    #ff6ec4,
+    #00f0ff,
+    #fa15fa,
+    #ff92df
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: wowGradient 5s ease infinite;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* subtle glow */
+}
+
+@keyframes wowGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
