@@ -87,9 +87,9 @@ export default function StarfieldBackground() {
       <motion.div
         className="absolute rounded-full"
         style={{
-          width: 100,
-          height: 100,
-          top: "10%",
+          width: 80,
+          height: 80,
+          top: "13%",
           right: "10%",
           x: moonOffsetX,
           y: moonOffsetY,
