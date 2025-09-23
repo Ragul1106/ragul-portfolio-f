@@ -62,10 +62,11 @@ export default function Projects() {
         <button
           onClick={handlePrev}
           disabled={page === 0}
-          className="absolute left-2 sm:left-6 md:left-10 text-white bg-black/50 p-3 sm:p-4 rounded-full hover:bg-black/70 transition disabled:opacity-50 z-20"
+          className="absolute left-2 sm:left-6 md:left-10 text-white bg-black/50 p-3 sm:p-4 rounded-full hover:bg-black/70 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer z-20"
         >
           <FiChevronLeft size={28} />
         </button>
+
 
         <AnimatePresence initial={false} mode="wait">
           <motion.div
@@ -149,10 +150,11 @@ export default function Projects() {
         <button
           onClick={handleNext}
           disabled={page === totalPages - 1}
-          className="absolute right-2 sm:right-6 md:right-10 text-white bg-black/50 p-3 sm:p-4 rounded-full hover:bg-black/70 transition disabled:opacity-50 z-20"
+          className="absolute right-2 sm:right-6 md:right-10 text-white bg-black/50 p-3 sm:p-4 rounded-full hover:bg-black/70 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer z-20"
         >
           <FiChevronRight size={28} />
         </button>
+
       </div>
 
       <div className="flex justify-center mt-6 gap-2">
