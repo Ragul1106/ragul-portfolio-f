@@ -157,16 +157,20 @@ export default function Projects() {
 
       </div>
 
-      <div className="flex justify-center mt-6 gap-2">
-        {Array.from({ length: totalPages }).map((_, i) => (
-          <button
-            key={i}
-            onClick={() => handleDotClick(i)}
-            className={`w-3 h-3 rounded-full ${i === page ? "bg-blue-500" : "bg-gray-700"
-              } hover:scale-110 transition-transform`}
-          ></button>
-        ))}
-      </div>
+      <div className="flex justify-center mt-6 gap-3">
+  {Array.from({ length: totalPages }).map((_, i) => (
+    <button
+      key={i}
+      onClick={() => handleDotClick(i)}
+      className={`w-8 h-2 rounded-full transition-all ${
+        i === page
+          ? "bg-blue-500 scale-110 shadow-md shadow-blue-400/50"
+          : "bg-gray-600 hover:bg-gray-500"
+      }`}
+    ></button>
+  ))}
+</div>
+
     </section>
   );
 }
